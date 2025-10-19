@@ -2,27 +2,148 @@ name: AdminToolsPlugin
 version: 1.0.0
 main: com.example.admintools.AdminToolsPlugin
 api-version: 1.21
-description: Плагин с админскими командами, частицами и синхронизацией чата
+description: Плагин с админскими командами и волшебной рыбой
 author: YourName
 website: https://github.com/yourname/admintoolsplugin
+prefix: AdminTools
 
 commands:
   setparticle:
     description: Установить след из частиц
     usage: /<command> [тип] [цвет] [размер]
-    permission: admintools.particle
   admin:
     description: Админские команды
-    usage: /<command> [подкоманда] [игрок]
-    permission: admintools.admin
+    usage: /<command> [подкоманда]
   admintools:
     description: Админские команды
-    usage: /<command> [подкоманда] [игрок]
-    permission: admintools.admin
+    usage: /<command> [подкоманда]
   at:
     description: Админские команды
-    usage: /<command> [подкоманда] [игрок]
-    permission: admintools.admin
+    usage: /<command> [подкоманда]
+  рыба:
+    description: Получить волшебную рыбу
+    usage: /<command>
+  # Прямые команды на русском (40+ команд!)
+  полет:
+    description: Включить/выключить полет
+    usage: /<command> [игрок]
+  исцелить:
+    description: Исцелить игрока
+    usage: /<command> [игрок]
+  еда:
+    description: Накормить игрока
+    usage: /<command> [игрок]
+  бог:
+    description: Режим бога
+    usage: /<command> [игрок]
+  невидимость:
+    description: Включить/выключить невидимость
+    usage: /<command>
+  скорость:
+    description: Изменить скорость
+    usage: /<command> <1-10> [игрок]
+  убить:
+    description: Убить игрока
+    usage: /<command> [игрок]
+  кик:
+    description: Кикнуть игрока
+    usage: /<command> <игрок> [причина]
+  мут:
+    description: Заглушить игрока
+    usage: /<command> <игрок>
+  очистить:
+    description: Очистить инвентарь
+    usage: /<command> [игрок]
+  огонь:
+    description: Поджечь игрока
+    usage: /<command> <игрок> [секунды]
+  молния:
+    description: Ударить молнией
+    usage: /<command> <игрок>
+  время:
+    description: Изменить время
+    usage: /<command> <время>
+  погода:
+    description: Изменить погоду
+    usage: /<command> <погода>
+  инвентарь:
+    description: Посмотреть инвентарь игрока
+    usage: /<command> <игрок]
+  верстак:
+    description: Открыть верстак
+    usage: /<command>
+  эндсундук:
+    description: Открыть эндерсундук
+    usage: /<command> [игрок]
+  верх:
+    description: Телепорт на верхнюю точку
+    usage: /<command>
+  череп:
+    description: Получить череп игрока
+    usage: /<command> <игрок]
+  скоростьполета:
+    description: Изменить скорость полета
+    usage: /<command> <1-10> [игрок]
+  скоростьходьбы:
+    description: Изменить скорость ходьбы
+    usage: /<command> <1-10> [игрок]
+  шляпа:
+    description: Надеть предмет в руке на голову
+    usage: /<command>
+  назад:
+    description: Вернуться на предыдущую локацию
+    usage: /<command>
+  объявление:
+    description: Сделать объявление
+    usage: /<command> <сообщение>
+  сказать:
+    description: Сказать от имени сервера
+    usage: /<command> <сообщение>
+  судо:
+    description: Заставить игрока выполнить команду
+    usage: /<command> <игрок> <команда>
+  починить:
+    description: Починить предмет
+    usage: /<command> [all]
+  режим:
+    description: Изменить режим игры
+    usage: /<command> <режим> [игрок]
+  телепорт:
+    description: Телепортироваться
+    usage: /<command> <игрок/x y z>
+  полныйремонт:
+    description: Починить все предметы
+    usage: /<command> [игрок]
+  летающаярыба:
+    description: Дать летающую рыбу
+    usage: /<command> [игрок]
+  ночноезрение:
+    description: Включить ночное зрение
+    usage: /<command> [игрок]
+  взрыв:
+    description: Создать взрыв
+    usage: /<command> [сила]
+  полныйреген:
+    description: Полное восстановление
+    usage: /<command> [игрок]
+  суперпрыжок:
+    description: Включить супер-прыжок
+    usage: /<command> [игрок]
+  клон:
+    description: Создать клона
+    usage: /<command> [игрок]
+  радуга:
+    description: Создать радужный след
+    usage: /<command>
+  метеорит:
+    description: Вызвать метеоритный дождь
+    usage: /<command>
+  инвиз:
+    description: Сделать игроков невидимыми
+    usage: /<command> [игрок]
+  полетрыбы:
+    description: Дать волшебную летающую рыбу
+    usage: /<command> [игрок]
 
 permissions:
   admintools.*:
@@ -47,25 +168,13 @@ permissions:
       admintools.ban: true
       admintools.mute: true
       admintools.clear: true
-      admintools.burn: true
-      admintools.strike: true
-      admintools.exp: true
-      admintools.money: true
-      admintools.repair: true
-      admintools.enchant: true
-      admintools.sudo: true
-      admintools.say: true
-      admintools.broadcast: true
-      admintools.top: true
-      admintools.skull: true
-      admintools.flyspeed: true
-      admintools.walkspeed: true
-      admintools.nick: true
-      admintools.hat: true
-      admintools.back: true
+      admintools.fish: true
   admintools.particle:
     description: Разрешение на использование частиц
     default: op
   admintools.admin:
     description: Разрешение на админские команды
+    default: op
+  admintools.fish:
+    description: Разрешение на волшебную рыбу
     default: op
