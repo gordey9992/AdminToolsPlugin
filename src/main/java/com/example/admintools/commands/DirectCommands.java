@@ -19,6 +19,7 @@ import java.util.*;
 public class DirectCommands implements CommandExecutor {
     
     private final AdminToolsPlugin plugin;
+    private final ConfigManager configManager; // Добавьте эту строку
     private final Map<UUID, Location> lastLocations = new HashMap<>();
     private final Set<UUID> vanishedPlayers = new HashSet<>();
     private final Set<UUID> mutedPlayers = new HashSet<>();
@@ -26,6 +27,7 @@ public class DirectCommands implements CommandExecutor {
     
     public DirectCommands(AdminToolsPlugin plugin) {
         this.plugin = plugin;
+        this.configManager = plugin.getConfigManager(); // Или как вы получаете ConfigManager
     }
     
     @Override
