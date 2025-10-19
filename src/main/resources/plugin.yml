@@ -1,0 +1,64 @@
+name: AdminToolsPlugin
+version: 1.0.0
+main: com.example.admintools.AdminToolsPlugin
+api-version: 1.21
+description: Плагин с админскими командами, частицами и синхронизацией чата
+author: YourName
+website: https://github.com/yourname/admintoolsplugin
+
+commands:
+  setparticle:
+    description: Установить след из частиц
+    usage: /<command> [тип] [цвет] [размер]
+    permission: admintools.particle
+  admin:
+    description: Админские команды
+    usage: /<command> [подкоманда] [игрок]
+    permission: admintools.admin
+  admintools:
+    description: Админские команды
+    usage: /<command> [подкоманда] [игрок]
+    permission: admintools.admin
+  at:
+    description: Админские команды
+    usage: /<command> [подкоманда] [игрок]
+    permission: admintools.admin
+
+permissions:
+  admintools.*:
+    description: Все разрешения плагина
+    children:
+      admintools.particle: true
+      admintools.admin: true
+      admintools.fly: true
+      admintools.gamemode: true
+      admintools.teleport: true
+      admintools.inventory: true
+      admintools.world: true
+      admintools.time: true
+      admintools.weather: true
+      admintools.heal: true
+      admintools.feed: true
+      admintools.god: true
+      admintools.vanish: true
+      admintools.speed: true
+      admintools.kill: true
+      admintools.kick: true
+      admintools.ban: true
+      admintools.mute: true
+      admintools.clear: true
+      admintools.burn: true
+      admintools.strike: true
+      admintools.exp: true
+      admintools.money: true
+      admintools.repair: true
+      admintools.enchant: true
+      admintools.sudo: true
+      admintools.say: true
+      admintools.broadcast: true
+  admintools.particle:
+    description: Разрешение на использование частиц
+    default: op
+  admintools.admin:
+    description: Разрешение на админские команды
+    default: op
