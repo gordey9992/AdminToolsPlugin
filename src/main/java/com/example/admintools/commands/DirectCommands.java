@@ -858,7 +858,11 @@ private void handleAntigravity(CommandSender sender, String[] args) {
     }
 }
 
-// Добавьте вызовы этих методов в switch в onCommand:
+// === ДОБАВЛЯЕМ ВЫЗОВЫ НОВЫХ КОМАНД В SWITCH ===
+// Этот код должен быть внутри метода onCommand, в блоке switch
+
+// Добавьте эти case в существующий switch в методе onCommand:
+/*
 case "суперсила":
     handleSuperPower(sender, args);
     break;
@@ -889,3 +893,25 @@ case "радиация":
 case "антигравитация":
     handleAntigravity(sender, args);
     break;
+*/
+
+// === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ===
+private Player getTarget(CommandSender sender, String[] args, int argIndex) {
+    if (args.length > argIndex) {
+        Player target = Bukkit.getPlayer(args[argIndex]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[argIndex])));
+            return null;
+        }
+        return target;
+    }
+    
+    if (sender instanceof Player) {
+        return (Player) sender;
+    }
+    
+    sender.sendMessage(configManager.getMessage("player-only"));
+    return null;
+}
+} // <-- ЗАКРЫВАЮЩАЯ СКОБКА КЛАССА DirectCommands
