@@ -1,0 +1,169 @@
+# Системные сообщения
+prefix: "&6[AdminTools] &f"
+no-permission: "&cУ вас нет разрешения на использование этой команды!"
+player-only: "&cЭту команду могут использовать только игроки!"
+player-not-found: "&cИгрок &6{player} &cне найден!"
+invalid-arguments: "&cНеверные аргументы команды!"
+usage: "&cИспользование: &6{usage}"
+help-header: "&6=== Админские команды (30+ команд) ==="
+help-format: "&e/{command} &7- {description}"
+
+# Команда частиц
+particle:
+  enabled: "&aСлед из частиц включен! Тип: &6{type}"
+  disabled: "&cСлед из частиц выключен"
+  invalid-type: "&cНеверный тип частиц. Доступные: &6{types}"
+  invalid-color: "&cНеверный цвет. Используйте HEX формат (#RRGGBB)"
+  list: "&aДоступные частицы: &6{list}"
+
+# Админские команды (30+ команд)
+fly:
+  enabled: "&aРежим полета включен для &6{player}"
+  disabled: "&cРежим полета выключен для &6{player}"
+  enabled-self: "&aРежим полета включен"
+  disabled-self: "&cРежим полет выключен"
+
+gamemode:
+  changed: "&aРежим игры изменен на &6{gamemode} &aдля &6{player}"
+  changed-self: "&aВаш режим игры изменен на &6{gamemode}"
+  invalid: "&cНеверный режим игры. Доступные: survival, creative, adventure, spectator"
+
+teleport:
+  teleported: "&aТелепортирован к &6{player}"
+  teleported-to: "&aТелепортирован к вам &6{player}"
+  brought: "&aИгрок &6{player} &aприведен к вам"
+  location: "&aТелепортирован к координатам &6{x} {y} {z}"
+  invalid-location: "&cНеверные координаты"
+  here: "&aИгрок &6{player} &aтелепортирован к вам"
+
+time:
+  set: "&aВремя установлено на &6{time}"
+  invalid: "&cНеверное время. Используйте: day, night, noon, midnight или число"
+
+weather:
+  set: "&aПогода установлена на &6{weather}"
+  invalid: "&cНеверная погода. Используйте: clear, rain, thunder"
+
+heal:
+  healed: "&aИгрок &6{player} &aисцелен"
+  healed-self: "&aВы исцелены"
+
+feed:
+  fed: "&aИгрок &6{player} &aнакормлен"
+  fed-self: "&aВы накормлены"
+
+god:
+  enabled: "&aРежим бога включен для &6{player}"
+  disabled: "&cРежим бога выключен для &6{player}"
+  enabled-self: "&aРежим бога включен"
+  disabled-self: "&cРежим бога выключен"
+
+vanish:
+  enabled: "&aРежим невидимости включен"
+  disabled: "&cРежим невидимости выключен"
+  list: "&aНевидимые игроки: &6{players}"
+
+speed:
+  set: "&aСкорость установлена на &6{speed}"
+  invalid: "&cНеверная скорость. Используйте число от 1 до 10"
+
+invsee:
+  opened: "&aОткрыт инвентарь игрока &6{player}"
+
+workbench:
+  opened: "&aОткрыт верстак"
+
+enderchest:
+  opened: "&aОткрыт эндерсундук"
+
+kill:
+  killed: "&cИгрок &6{player} &cубит"
+  killed-self: "&cВы совершили суицид"
+
+kick:
+  kicked: "&cИгрок &6{player} &cкикнут. Причина: &6{reason}"
+  kicked-message: "&cВы были кикнуты. Причина: &6{reason}"
+
+ban:
+  banned: "&cИгрок &6{player} &cзабанен. Причина: &6{reason}"
+  banned-message: "&cВы забанены. Причина: &6{reason}"
+
+mute:
+  muted: "&cИгрок &6{player} &cзаглушен"
+  unmuted: "&aИгрок &6{player} &aразглушен"
+  muted-self: "&cВы заглушены"
+  unmuted-self: "&aВы разглушены"
+  already-muted: "&cИгрок уже заглушен"
+  not-muted: "&cИгрок не заглушен"
+
+clear:
+  cleared: "&aИнвентарь игрока &6{player} &aочищен"
+  cleared-self: "&aВаш инвентарь очищен"
+
+burn:
+  burning: "&cИгрок &6{player} &cподожжен на &6{seconds} &cсекунд"
+  burning-self: "&cВы подожжены на &6{seconds} &cсекунд"
+
+strike:
+  struck: "&cВ игрока &6{player} &cпопала молния"
+  struck-self: "&cВ вас попала молния"
+
+exp:
+  given: "&aВыдано &6{amount} &aопыта игроку &6{player}"
+  given-self: "&aВыдано &6{amount} &aопыта"
+  set: "&aУстановлено &6{amount} &aопыта игроку &6{player}"
+  set-self: "&aУстановлено &6{amount} &aопыта"
+
+money:
+  given: "&aВыдано &6{amount} &aденег игроку &6{player}"
+  given-self: "&aВыдано &6{amount} &aденег"
+  set: "&aУстановлено &6{amount} &aденег игроку &6{player}"
+  set-self: "&aУстановлено &6{amount} &aденег"
+
+repair:
+  repaired: "&aПредмет в руке починен для &6{player}"
+  repaired-self: "&aВаш предмет в руке починен"
+  repaired-all: "&aВсе предметы починены для &6{player}"
+  repaired-all-self: "&aВсе ваши предметы починены"
+
+enchant:
+  enchanted: "&aПредмет в руке зачарован для &6{player}"
+  enchanted-self: "&aВаш предмет в руке зачарован"
+  invalid-enchant: "&cНеверное зачарование"
+
+sudo:
+  forced: "&aИгрок &6{player} &aвыполнил команду: &6{command}"
+  forced-chat: "&aИгрок &6{player} &aсказал: &6{message}"
+
+say:
+  said: "&6[Сервер] &f{message}"
+
+broadcast:
+  broadcasted: "&4[ОБЪЯВЛЕНИЕ] &6{message}"
+
+top:
+  teleported: "&aТелепортирован на верхнюю точку"
+
+skull:
+  given: "&aВыдан череп игрока &6{player}"
+
+flyspeed:
+  set: "&aСкорость полета установлена на &6{speed}"
+
+walkspeed:
+  set: "&aСкорость ходьбы установлена на &6{speed}"
+
+nick:
+  changed: "&aНикнейм изменен на &6{nickname}"
+  reset: "&aНикнейм сброшен"
+
+hat:
+  equipped: "&aПредмет надет на голову"
+
+back:
+  teleported: "&aТелепортирован на предыдущую локацию"
+  no-location: "&cНет предыдущей локации"
+
+gravity:
+  enabled: "&aГравитация включена для &6{player}"
+  disabled: "&cГравитация выключена для &6{player}"
