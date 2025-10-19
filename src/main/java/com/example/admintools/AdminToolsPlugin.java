@@ -8,7 +8,8 @@ import com.example.admintools.utils.ConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AdminToolsPlugin extends JavaPlugin {
-    
+
+    private ConfigManager configManager;
     private static AdminToolsPlugin instance;
     private ConfigManager configManager;
     private ParticleManager particleManager;
@@ -18,6 +19,8 @@ public class AdminToolsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        
+        this.configManager = new ConfigManager(this);
         
         // Красивое приветствие в консоль
         printWelcomeMessage();
