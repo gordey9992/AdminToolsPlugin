@@ -15,33 +15,33 @@ public class AdminToolsPlugin extends JavaPlugin {
     private CommandManager commandManager;
     private TelegramManager telegramManager;
     
-@Override
-public void onEnable() {
-    instance = this;
-    
-    // Инициализация менеджеров
-    this.configManager = new ConfigManager(this);
-    this.particleManager = new ParticleManager(this);
-    this.commandManager = new CommandManager(this);
-    
-    // Загрузка конфигурации
-    configManager.saveDefaultConfig();
-    configManager.reloadConfig(); // Теперь загружает и config.yml и messages.yml
-    
-    // Регистрация команд
-    commandManager.registerCommands();
-    
-    // Инициализация телеграм бота если включен
-    if (configManager.getConfig().getBoolean("telegram.enabled", false)) {
-        this.telegramManager = new TelegramManager(this);
-        telegramManager.startBot();
+    @Override
+    public void onEnable() {
+        instance = this;
         
-        // Регистрация слушателя чата
-        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        // Инициализация менеджеров
+        this.configManager = new ConfigManager(this);
+        this.particleManager = new ParticleManager(this);
+        this.commandManager = new CommandManager(this);
+        
+        // Загрузка конфигурации
+        configManager.saveDefaultConfig();
+        configManager.reloadConfig();
+        
+        // Регистрация команд
+        commandManager.registerCommands();
+        
+        // Инициализация телеграм бота если включен
+        if (configManager.getConfig().getBoolean("telegram.enabled", false)) {
+            this.telegramManager = new TelegramManager(this);
+            telegramManager.startBot();
+            
+            // Регистрация слушателя чата
+            getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        }
+        
+        getLogger().info("AdminToolsPlugin включен!");
     }
-    
-    getLogger().info("AdminToolsPlugin включен!");
-}
     
     @Override
     public void onDisable() {
