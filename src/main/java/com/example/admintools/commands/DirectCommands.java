@@ -614,4 +614,278 @@ public class DirectCommands implements CommandExecutor {
         sender.sendMessage(configManager.getMessage("player-only"));
         return null;
     }
+
+    // === ЕЩЕ БОЛЬШЕ КРУТЫХ КОМАНД ===
+
+private void handleSuperPower(CommandSender sender, String[] args) {
+    Player target = getTarget(sender, args, 0);
+    if (target == null) return;
+    
+    target.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*5, 2, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*60*5, 2, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*60*5, 1, true, true));
+    
+    target.sendMessage("§6Супер-сила активирована на 5 минут!");
+    
+    if (target != sender) {
+        sender.sendMessage("§6Супер-сила дана игроку §e" + target.getName());
+    }
 }
+
+private void handleWaterfall(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    Location loc = player.getLocation();
+    
+    new BukkitRunnable() {
+        int ticks = 0;
+        @Override
+        public void run() {
+            if (ticks++ > 100) {
+                cancel();
+                return;
+            }
+            
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    Location waterLoc = loc.clone().add(x, 5, z);
+                    player.getWorld().spawnParticle(Particle.WATER_SPLASH, waterLoc, 2);
+                }
+            }
+        }
+    }.runTaskTimer(plugin, 0L, 2L);
+    
+    player.sendMessage("§9Водопад создан!");
+}
+
+private void handleLaser(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    Location start = player.getEyeLocation();
+    Location end = start.clone().add(start.getDirection().multiply(50));
+    
+    // Создаем лазерный луч
+    double distance = start.distance(end);
+    Vector direction = start.getDirection();
+    
+    for (double d = 0; d < distance; d += 0.5) {
+        Location point = start.clone().add(direction.clone().multiply(d));
+        player.getWorld().spawnParticle(Particle.REDSTONE, point, 1, 
+            new Particle.DustOptions(Color.RED, 1));
+    }
+    
+    // Взрыв в конце луча
+    end.getWorld().createExplosion(end, 3.0f, false, true);
+    player.sendMessage("§cЛазерный луч выпущен!");
+}
+
+private void handleTelekinesis(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20*30, 1, true, true));
+    player.sendMessage("§dТелекинез активирован! Вы парите 30 секунд!");
+}
+
+private void handleFreeze(CommandSender sender, String[] args) {
+    Player target = getTarget(sender, args, 0);
+    if (target == null) return;
+    
+    target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20*30, 255, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20*30, 128, true, true));
+    
+    // Ледяные частицы
+    new BukkitRunnable() {
+        int ticks = 0;
+        @Override
+        public void run() {
+            if (ticks++ > 600 || !target.isOnline()) {
+                cancel();
+                return;
+            }
+            target.getWorld().spawnParticle(Particle.SNOW_SHOVEL, target.getLocation(), 5);
+        }
+    }.runTaskTimer(plugin, 0L, 5L);
+    
+    target.sendMessage("§bВы заморожены на 30 секунд!");
+    
+    if (target != sender) {
+        sender.sendMessage("§bИгрок §3" + target.getName() + " §bзаморожен!");
+    }
+}
+
+private void handleTornado(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    Location center = player.getLocation();
+    
+    new BukkitRunnable() {
+        int ticks = 0;
+        @Override
+        public void run() {
+            if (ticks++ > 200) {
+                cancel();
+                return;
+            }
+            
+            for (double y = 0; y < 10; y += 0.5) {
+                for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) {
+                    double x = Math.cos(angle + ticks * 0.1) * (y * 0.3);
+                    double z = Math.sin(angle + ticks * 0.1) * (y * 0.3);
+                    Location particleLoc = center.clone().add(x, y, z);
+                    player.getWorld().spawnParticle(Particle.CLOUD, particleLoc, 1);
+                }
+            }
+        }
+    }.runTaskTimer(plugin, 0L, 1L);
+    
+    player.sendMessage("§7Торнадо создано!");
+}
+
+private void handleEarthquake(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    Location center = player.getLocation();
+    
+    // Тряска камеры у всех игроков поблизости
+    for (Player nearby : player.getWorld().getPlayers()) {
+        if (nearby.getLocation().distance(center) < 20) {
+            nearby.playEffect(EntityEffect.TOTEM_RESURRECT);
+        }
+    }
+    
+    // Взрывы вокруг
+    for (int i = 0; i < 8; i++) {
+        double angle = 2 * Math.PI * i / 8;
+        double x = center.getX() + 5 * Math.cos(angle);
+        double z = center.getZ() + 5 * Math.sin(angle);
+        Location explosionLoc = new Location(center.getWorld(), x, center.getY(), z);
+        center.getWorld().createExplosion(explosionLoc, 2.0f, false, true);
+    }
+    
+    player.sendMessage("§6Землетрясение началось!");
+}
+
+private void handleNectar(CommandSender sender, String[] args) {
+    Player target = getTarget(sender, args, 0);
+    if (target == null) return;
+    
+    target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60, 2, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*60, 4, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 20*60, 1, true, true));
+    
+    // Цветочные частицы
+    new BukkitRunnable() {
+        int ticks = 0;
+        @Override
+        public void run() {
+            if (ticks++ > 100) {
+                cancel();
+                return;
+            }
+            target.getWorld().spawnParticle(Particle.HEART, target.getLocation().add(0, 2, 0), 2);
+        }
+    }.runTaskTimer(plugin, 0L, 10L);
+    
+    target.sendMessage("§dНектар богов выпит! Удача на вашей стороне!");
+    
+    if (target != sender) {
+        sender.sendMessage("§dНектар дан игроку §5" + target.getName());
+    }
+}
+
+private void handleRadiation(CommandSender sender, String[] args) {
+    Player target = getTarget(sender, args, 0);
+    if (target == null) return;
+    
+    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*30, 1, true, true));
+    target.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20*15, 0, true, true));
+    
+    // Радиоактивные частицы
+    new BukkitRunnable() {
+        int ticks = 0;
+        @Override
+        public void run() {
+            if (ticks++ > 600 || !target.isOnline()) {
+                cancel();
+                return;
+            }
+            target.getWorld().spawnParticle(Particle.SLIME, target.getLocation(), 3);
+        }
+    }.runTaskTimer(plugin, 0L, 5L);
+    
+    target.sendMessage("§a☢ Вы подверглись радиации!");
+    
+    if (target != sender) {
+        sender.sendMessage("§aРадиация применена к §2" + target.getName());
+    }
+}
+
+private void handleAntigravity(CommandSender sender, String[] args) {
+    if (!(sender instanceof Player)) {
+        sender.sendMessage(configManager.getMessage("player-only"));
+        return;
+    }
+    
+    Player player = (Player) sender;
+    player.setGravity(!player.hasGravity());
+    
+    if (!player.hasGravity()) {
+        player.sendMessage("§eАнтигравитация включена!");
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 0, true, false));
+    } else {
+        player.sendMessage("§eАнтигравитация выключена!");
+        player.removePotionEffect(PotionEffectType.LEVITATION);
+    }
+}
+
+// Добавьте вызовы этих методов в switch в onCommand:
+case "суперсила":
+    handleSuperPower(sender, args);
+    break;
+case "водопад":
+    handleWaterfall(sender, args);
+    break;
+case "лазер":
+    handleLaser(sender, args);
+    break;
+case "телекинез":
+    handleTelekinesis(sender, args);
+    break;
+case "заморозка":
+    handleFreeze(sender, args);
+    break;
+case "торнадо":
+    handleTornado(sender, args);
+    break;
+case "землетрясение":
+    handleEarthquake(sender, args);
+    break;
+case "нектар":
+    handleNectar(sender, args);
+    break;
+case "радиация":
+    handleRadiation(sender, args);
+    break;
+case "антигравитация":
+    handleAntigravity(sender, args);
+    break;
