@@ -16,6 +16,7 @@ public class TelegramManager {
     private final AdminToolsPlugin plugin;
     private final String botToken;
     private final String chatId;
+    private final String topicId;
     private int lastMessageId = 0;
     private boolean running = false;
     
@@ -24,12 +25,13 @@ public class TelegramManager {
         FileConfiguration config = plugin.getConfigManager().getConfig();
         this.botToken = config.getString("telegram.bot-token");
         this.chatId = config.getString("telegram.chat-id");
+        this.topicId = config.getString("telegram.topic-id", "434");
     }
     
     public void startBot() {
         running = true;
         startUpdateChecker();
-        plugin.getLogger().info("Telegram бот запущен!");
+        plugin.getLogger().info("Telegram бот запущен! Топик: " + topicId);
     }
     
     public void stopBot() {
@@ -45,10 +47,12 @@ public class TelegramManager {
         
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
+                // Формируем URL с указанием topic_id для отправки в конкретную тему
                 String urlString = String.format(
-                    "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s",
+                    "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&message_thread_id=%s&text=%s",
                     botToken,
                     chatId,
+                    topicId,
                     URLEncoder.encode(formattedMessage, StandardCharsets.UTF_8)
                 );
                 
@@ -58,12 +62,25 @@ public class TelegramManager {
                 
                 int responseCode = conn.getResponseCode();
                 if (responseCode != 200) {
+                    // Читаем ошибку для отладки
+                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                    StringBuilder errorResponse = new StringBuilder();
+                    String errorLine;
+                    while ((errorLine = errorReader.readLine()) != null) {
+                        errorResponse.append(errorLine);
+                    }
+                    errorReader.close();
+                    
                     plugin.getLogger().warning("Ошибка отправки сообщения в Telegram: " + responseCode);
+                    plugin.getLogger().warning("Ответ ошибки: " + errorResponse.toString());
+                } else {
+                    plugin.getLogger().info("Сообщение отправлено в топик " + topicId);
                 }
                 
                 conn.disconnect();
             } catch (Exception e) {
                 plugin.getLogger().warning("Ошибка при отправке сообщения в Telegram: " + e.getMessage());
+                e.printStackTrace();
             }
         });
     }
@@ -101,7 +118,6 @@ public class TelegramManager {
     }
     
     private void processUpdates(String jsonResponse) {
-        // Простая обработка JSON (для простоты)
         if (!jsonResponse.contains("\"result\"")) return;
         
         String[] messages = jsonResponse.split("\"message\"");
@@ -117,6 +133,16 @@ public class TelegramManager {
                 
                 // Проверяем что сообщение из нужного чата
                 if (!message.contains("\"chat\":{\"id\":" + chatId)) continue;
+                
+                // Проверяем что сообщение из нужной темы (topic)
+                if (!message.contains("\"message_thread_id\":" + topicId)) {
+                    // Если нет message_thread_id, проверяем есть ли текст и он не из общей темы
+                    if (message.contains("\"text\"")) {
+                        String text = message.split("\"text\":\"")[1].split("\"")[0];
+                        // Пропускаем сообщения не из нужной темы
+                        continue;
+                    }
+                }
                 
                 // Получаем текст сообщения
                 if (!message.contains("\"text\"")) continue;
