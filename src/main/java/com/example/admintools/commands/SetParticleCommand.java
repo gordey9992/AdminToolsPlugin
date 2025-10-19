@@ -1,7 +1,6 @@
 package com.example.admintools.commands;
 
 import com.example.admintools.AdminToolsPlugin;
-import com.example.admintools.utils.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,30 +8,27 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SetParticleCommand implements CommandExecutor, TabCompleter {
     
     private final AdminToolsPlugin plugin;
-    private final ConfigManager configManager;
     
     public SetParticleCommand(AdminToolsPlugin plugin) {
         this.plugin = plugin;
-        this.configManager = plugin.getConfigManager();
     }
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return true;
         }
         
         Player player = (Player) sender;
         
         if (!player.hasPermission("admintools.particle")) {
-            player.sendMessage(configManager.getMessage("no-permission"));
+            player.sendMessage("§cУ вас нет разрешения на использование этой команды!");
             return true;
         }
         
@@ -40,12 +36,10 @@ public class SetParticleCommand implements CommandExecutor, TabCompleter {
             // Включить/выключить частицы
             if (plugin.getParticleManager().hasParticleTrail(player)) {
                 plugin.getParticleManager().disableParticleTrail(player);
-                player.sendMessage(configManager.getMessage("particle.disabled"));
+                player.sendMessage("§cСлед из частиц выключен");
             } else {
-                player.sendMessage(configManager.getMessage("usage", 
-                    java.util.Map.of("usage", "/setparticle [тип] [цвет] [размер]")));
-                player.sendMessage(configManager.getMessage("particle.list", 
-                    java.util.Map.of("list", plugin.getParticleManager().getAvailableParticles())));
+                player.sendMessage("§cИспользование: /setparticle [тип] [цвет] [размер]");
+                player.sendMessage("§aДоступные частицы: " + plugin.getParticleManager().getAvailableParticles());
             }
             return true;
         }
@@ -56,8 +50,7 @@ public class SetParticleCommand implements CommandExecutor, TabCompleter {
         
         plugin.getParticleManager().setParticleTrail(player, particleType, color, size);
         
-        player.sendMessage(configManager.getMessage("particle.enabled", 
-            java.util.Map.of("type", particleType)));
+        player.sendMessage("§aСлед из частиц включен! Тип: §6" + particleType);
         
         return true;
     }
