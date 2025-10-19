@@ -1,6 +1,7 @@
 package com.example.admintools.commands;
 
 import com.example.admintools.AdminToolsPlugin;
+import com.example.admintools.utils.ConfigManager;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,7 @@ import java.util.*;
 public class DirectCommands implements CommandExecutor {
     
     private final AdminToolsPlugin plugin;
-    private final ConfigManager configManager; // Добавьте эту строку
+    private final ConfigManager configManager;
     private final Map<UUID, Location> lastLocations = new HashMap<>();
     private final Set<UUID> vanishedPlayers = new HashSet<>();
     private final Set<UUID> mutedPlayers = new HashSet<>();
@@ -27,7 +28,7 @@ public class DirectCommands implements CommandExecutor {
     
     public DirectCommands(AdminToolsPlugin plugin) {
         this.plugin = plugin;
-        this.configManager = plugin.getConfigManager(); // Или как вы получаете ConfigManager
+        this.configManager = plugin.getConfigManager();
     }
     
     @Override
