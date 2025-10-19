@@ -170,10 +170,45 @@ public class DirectCommands implements CommandExecutor {
             default:
                 sender.sendMessage("§cНеизвестная команда: /" + commandName);
                 break;
-        }
-        
-        return true;
+                        // ДОБАВЬТЕ ЭТИ НОВЫЕ CASE:
+        case "суперсила":
+            handleSuperPower(sender, args);
+            break;
+        case "водопад":
+            handleWaterfall(sender, args);
+            break;
+        case "лазер":
+            handleLaser(sender, args);
+            break;
+        case "телекинез":
+            handleTelekinesis(sender, args);
+            break;
+        case "заморозка":
+            handleFreeze(sender, args);
+            break;
+        case "торнадо":
+            handleTornado(sender, args);
+            break;
+        case "землетрясение":
+            handleEarthquake(sender, args);
+            break;
+        case "нектар":
+            handleNectar(sender, args);
+            break;
+        case "радиация":
+            handleRadiation(sender, args);
+            break;
+        case "антигравитация":
+            handleAntigravity(sender, args);
+            break;
+            
+        default:
+            sender.sendMessage("§cНеизвестная команда: /" + commandName);
+            break;
     }
+    
+    return true;
+}
     
     // === ВОЛШЕБНАЯ РЫБА ===
     private void giveMagicFish(CommandSender sender, String[] args) {
