@@ -16,7 +16,7 @@ public class CommandManager {
     public void registerCommands() {
         // Сначала создаем основной командный класс
         this.adminCommand = new AdminCommand(plugin);
-        this.directCommands = new DirectCommands(plugin, adminCommand);
+        this.directCommands = new DirectCommands(plugin);
         
         // Регистрируем команду частиц
         PluginCommand setParticleCommand = plugin.getCommand("setparticle");
