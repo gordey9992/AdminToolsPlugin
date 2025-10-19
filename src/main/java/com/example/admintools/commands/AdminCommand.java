@@ -32,218 +32,216 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     }
     
     @Override
-public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if (args.length == 0) {
-        sendHelp(sender);
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            sendHelp(sender);
+            return true;
+        }
+        
+        String subCommand = args[0].toLowerCase();
+        
+        // Поддержка русского и английского
+        switch (subCommand) {
+            // Fly / Полет
+            case "fly": case "полет":
+                handleFly(sender, args);
+                break;
+                
+            // Gamemode / Режим
+            case "gamemode": case "gm": case "режим":
+                handleGamemode(sender, args);
+                break;
+                
+            // Teleport / Телепорт
+            case "teleport": case "tp": case "телепорт":
+                handleTeleport(sender, args);
+                break;
+                
+            // Heal / Исцелить
+            case "heal": case "исцелить": case "хил":
+                handleHeal(sender, args);
+                break;
+                
+            // Feed / Еда
+            case "feed": case "еда": case "покормить":
+                handleFeed(sender, args);
+                break;
+                
+            // God / Бог
+            case "god": case "бог": case "бессмертие":
+                handleGod(sender, args);
+                break;
+                
+            // Vanish / Невидимость
+            case "vanish": case "v": case "невидимость": case "невидимка":
+                handleVanish(sender, args);
+                break;
+                
+            // Speed / Скорость
+            case "speed": case "скорость":
+                handleSpeed(sender, args);
+                break;
+                
+            // Kill / Убить
+            case "kill": case "убить": case "слай":
+                handleKill(sender, args);
+                break;
+                
+            // Kick / Кик
+            case "kick": case "кик": case "кикнуть":
+                handleKick(sender, args);
+                break;
+                
+            // Mute / Мут
+            case "mute": case "мьют": case "мут": case "заглушить":
+                handleMute(sender, args);
+                break;
+                
+            // Clear / Очистить
+            case "clear": case "очистить": case "клир":
+                handleClear(sender, args);
+                break;
+                
+            // Burn / Огонь
+            case "burn": case "огонь": case "поджечь":
+                handleBurn(sender, args);
+                break;
+                
+            // Strike / Молния
+            case "strike": case "молния": case "удар":
+                handleStrike(sender, args);
+                break;
+                
+            // Time / Время
+            case "time": case "время":
+                handleTime(sender, args);
+                break;
+                
+            // Weather / Погода
+            case "weather": case "погода":
+                handleWeather(sender, args);
+                break;
+                
+            // Invsee / Инвентарь
+            case "invsee": case "инвентарь": case "инв":
+                handleInvsee(sender, args);
+                break;
+                
+            // Workbench / Верстак
+            case "workbench": case "верстак":
+                handleWorkbench(sender, args);
+                break;
+                
+            // Enderchest / Эндерсундук
+            case "enderchest": case "эндсундук": case "эш":
+                handleEnderchest(sender, args);
+                break;
+                
+            // Top / Верх
+            case "top": case "верх":
+                handleTop(sender, args);
+                break;
+                
+            // Skull / Череп
+            case "skull": case "череп": case "голова":
+                handleSkull(sender, args);
+                break;
+                
+            // Flyspeed / Скоростьполета
+            case "flyspeed": case "скоростьполета": case "скоростьполёта":
+                handleFlySpeed(sender, args);
+                break;
+                
+            // Walkspeed / Скоростьходьбы
+            case "walkspeed": case "скоростьходьбы": case "скоростьходу":
+                handleWalkSpeed(sender, args);
+                break;
+                
+            // Hat / Шляпа
+            case "hat": case "шляпа": case "шапка":
+                handleHat(sender, args);
+                break;
+                
+            // Back / Назад
+            case "back": case "назад": case "вернуться":
+                handleBack(sender, args);
+                break;
+                
+            // Broadcast / Объявление
+            case "broadcast": case "bc": case "объявление": case "объявить":
+                handleBroadcast(sender, args);
+                break;
+                
+            // Say / Сказать
+            case "say": case "сказать": case "сервер":
+                handleSay(sender, args);
+                break;
+                
+            // Sudo / Судо
+            case "sudo": case "судо": case "заставить":
+                handleSudo(sender, args);
+                break;
+                
+            // Repair / Починить
+            case "repair": case "починить": case "ремонт":
+                handleRepair(sender, args);
+                break;
+                
+            // Help / Помощь
+            case "help": case "помощь": case "хелп":
+                sendHelp(sender);
+                break;
+                
+            default:
+                sender.sendMessage(configManager.getMessage("invalid-arguments"));
+                sendHelp(sender);
+                break;
+        }
+        
         return true;
     }
     
-    String subCommand = args[0].toLowerCase();
-    
-    // Поддержка русского и английского
-    switch (subCommand) {
-        // Fly / Полет
-        case "fly": case "полет":
-            handleFly(sender, args);
-            break;
-            
-        // Gamemode / Режим
-        case "gamemode": case "gm": case "режим":
-            handleGamemode(sender, args);
-            break;
-            
-        // Teleport / Телепорт
-        case "teleport": case "tp": case "телепорт":
-            handleTeleport(sender, args);
-            break;
-            
-        // Heal / Исцелить
-        case "heal": case "исцелить": case "хил":
-            handleHeal(sender, args);
-            break;
-            
-        // Feed / Еда
-        case "feed": case "еда": case "покормить":
-            handleFeed(sender, args);
-            break;
-            
-        // God / Бог
-        case "god": case "бог": case "бессмертие":
-            handleGod(sender, args);
-            break;
-            
-        // Vanish / Невидимость
-        case "vanish": case "v": case "невидимость": case "невидимка":
-            handleVanish(sender, args);
-            break;
-            
-        // Speed / Скорость
-        case "speed": case "скорость":
-            handleSpeed(sender, args);
-            break;
-            
-        // Kill / Убить
-        case "kill": case "убить": case "слай":
-            handleKill(sender, args);
-            break;
-            
-        // Kick / Кик
-        case "kick": case "кик": case "кикнуть":
-            handleKick(sender, args);
-            break;
-            
-        // Mute / Мут
-        case "mute": case "мьют": case "мут": case "заглушить":
-            handleMute(sender, args);
-            break;
-            
-        // Clear / Очистить
-        case "clear": case "очистить": case "клир":
-            handleClear(sender, args);
-            break;
-            
-        // Burn / Огонь
-        case "burn": case "огонь": case "поджечь":
-            handleBurn(sender, args);
-            break;
-            
-        // Strike / Молния
-        case "strike": case "молния": case "удар":
-            handleStrike(sender, args);
-            break;
-            
-        // Time / Время
-        case "time": case "время":
-            handleTime(sender, args);
-            break;
-            
-        // Weather / Погода
-        case "weather": case "погода":
-            handleWeather(sender, args);
-            break;
-            
-        // Invsee / Инвентарь
-        case "invsee": case "инвентарь": case "инв":
-            handleInvsee(sender, args);
-            break;
-            
-        // Workbench / Верстак
-        case "workbench": case "верстак": case "верстак":
-            handleWorkbench(sender, args);
-            break;
-            
-        // Enderchest / Эндерсундук
-        case "enderchest": case "эндсундук": case "эш":
-            handleEnderchest(sender, args);
-            break;
-            
-        // Top / Верх
-        case "top": case "верх":
-            handleTop(sender, args);
-            break;
-            
-        // Skull / Череп
-        case "skull": case "череп": case "голова":
-            handleSkull(sender, args);
-            break;
-            
-        // Flyspeed / Скоростьполета
-        case "flyspeed": case "скоростьполета": case "скоростьполёта":
-            handleFlySpeed(sender, args);
-            break;
-            
-        // Walkspeed / Скоростьходьбы
-        case "walkspeed": case "скоростьходьбы": case "скоростьходу":
-            handleWalkSpeed(sender, args);
-            break;
-            
-        // Hat / Шляпа
-        case "hat": case "шляпа": case "шапка":
-            handleHat(sender, args);
-            break;
-            
-        // Back / Назад
-        case "back": case "назад": case "вернуться":
-            handleBack(sender, args);
-            break;
-            
-        // Broadcast / Объявление
-        case "broadcast": case "bc": case "объявление": case "объявить":
-            handleBroadcast(sender, args);
-            break;
-            
-        // Say / Сказать
-        case "say": case "сказать": case "сервер":
-            handleSay(sender, args);
-            break;
-            
-        // Sudo / Судо
-        case "sudo": case "судо": case "заставить":
-            handleSudo(sender, args);
-            break;
-            
-        // Repair / Починить
-        case "repair": case "починить": case "ремонт":
-            handleRepair(sender, args);
-            break;
-            
-        // Help / Помощь
-        case "help": case "помощь": case "хелп":
-            sendHelp(sender);
-            break;
-            
-        default:
-            sender.sendMessage(configManager.getMessage("invalid-arguments"));
-            sendHelp(sender);
-            break;
+    private void sendHelp(CommandSender sender) {
+        sender.sendMessage("§6=== Админские команды (рус/англ) ===");
+        
+        String[][] commands = {
+            {"fly [player]", "полет [игрок]", "Включить/выключить полет"},
+            {"gamemode <mode> [player]", "режим <режим> [игрок]", "Изменить режим игры"},
+            {"teleport <player/xyz>", "телепорт <игрок/x y z>", "Телепортироваться"},
+            {"heal [player]", "исцелить [игрок]", "Исцелить игрока"},
+            {"feed [player]", "еда [игрок]", "Накормить игрока"},
+            {"god [player]", "бог [игрок]", "Режим бога"},
+            {"vanish", "невидимость", "Невидимость"},
+            {"speed <1-10> [player]", "скорость <1-10> [игрок]", "Изменить скорость"},
+            {"kill [player]", "убить [игрок]", "Убить игрока"},
+            {"kick <player> [reason]", "кик <игрок> [причина]", "Кикнуть игрока"},
+            {"mute <player>", "мут <игрок>", "Заглушить игрока"},
+            {"clear [player]", "очистить [игрок]", "Очистить инвентарь"},
+            {"burn <player> [seconds]", "огонь <игрок> [секунды]", "Поджечь игрока"},
+            {"strike <player>", "молния <игрок>", "Ударить молнией"},
+            {"time <time>", "время <время>", "Изменить время"},
+            {"weather <weather>", "погода <погода>", "Изменить погоду"},
+            {"invsee <player>", "инвентарь <игрок>", "Посмотреть инвентарь"},
+            {"workbench", "верстак", "Открыть верстак"},
+            {"enderchest [player]", "эндсундук [игрок]", "Открыть эндерсундук"},
+            {"top", "верх", "Телепорт на верх"},
+            {"skull <player>", "череп <игрок>", "Получить череп"},
+            {"flyspeed <1-10> [player]", "скоростьполета <1-10> [игрок]", "Скорость полета"},
+            {"walkspeed <1-10> [player]", "скоростьходьбы <1-10> [игрок]", "Скорость ходьбы"},
+            {"hat", "шляпа", "Надеть шляпу"},
+            {"back", "назад", "Вернуться назад"},
+            {"broadcast <message>", "объявление <сообщение>", "Объявление"},
+            {"say <message>", "сказать <сообщение>", "Сказать от имени сервера"},
+            {"sudo <player> <command/message>", "судо <игрок> <команда/сообщение>", "Заставить выполнить"},
+            {"repair [all]", "починить [all]", "Починить предмет"}
+        };
+        
+        for (String[] cmd : commands) {
+            sender.sendMessage("§e/admin " + cmd[0] + " §7- " + cmd[2]);
+        }
     }
     
-    return true;
-}
-    
-private void sendHelp(CommandSender sender) {
-    sender.sendMessage(configManager.getMessage("help-header"));
-    
-    String[][] commands = {
-        // Английский | Русский | Описание
-        {"fly [player]", "полет [игрок]", "Включить/выключить полет"},
-        {"gamemode <mode> [player]", "режим <режим> [игрок]", "Изменить режим игры"},
-        {"teleport <player/xyz>", "телепорт <игрок/x y z>", "Телепортироваться"},
-        {"heal [player]", "исцелить [игрок]", "Исцелить игрока"},
-        {"feed [player]", "еда [игрок]", "Накормить игрока"},
-        {"god [player]", "бог [игрок]", "Режим бога"},
-        {"vanish", "невидимость", "Невидимость"},
-        {"speed <1-10> [player]", "скорость <1-10> [игрок]", "Изменить скорость"},
-        {"kill [player]", "убить [игрок]", "Убить игрока"},
-        {"kick <player> [reason]", "кик <игрок> [причина]", "Кикнуть игрока"},
-        {"mute <player> [time]", "мут <игрок> [время]", "Заглушить игрока"},
-        {"clear [player]", "очистить [игрок]", "Очистить инвентарь"},
-        {"burn <player> [seconds]", "огонь <игрок> [секунды]", "Поджечь игрока"},
-        {"strike <player>", "молния <игрок>", "Ударить молнией"},
-        {"time <time>", "время <время>", "Изменить время"},
-        {"weather <weather>", "погода <погода>", "Изменить погоду"},
-        {"invsee <player>", "инвентарь <игрок>", "Посмотреть инвентарь"},
-        {"workbench", "верстак", "Открыть верстак"},
-        {"enderchest [player]", "эндсундук [игрок]", "Открыть эндерсундук"},
-        {"top", "верх", "Телепорт на верх"},
-        {"skull <player>", "череп <игрок>", "Получить череп"},
-        {"flyspeed <1-10> [player]", "скоростьполета <1-10> [игрок]", "Скорость полета"},
-        {"walkspeed <1-10> [player]", "скоростьходьбы <1-10> [игрок]", "Скорость ходьбы"},
-        {"hat", "шляпа", "Надеть шляпу"},
-        {"back", "назад", "Вернуться назад"},
-        {"broadcast <message>", "объявление <сообщение>", "Объявление"},
-        {"say <message>", "сказать <сообщение>", "Сказать от имени сервера"},
-        {"sudo <player> <command/message>", "судо <игрок> <команда/сообщение>", "Заставить выполнить"},
-        {"repair [all]", "починить [all]", "Починить предмет"}
-    };
-    
-    for (String[] cmd : commands) {
-        sender.sendMessage("§e/admin " + cmd[0] + " §7- " + cmd[2]);
-        sender.sendMessage("§e/admin " + cmd[1] + " §7- " + cmd[2]);
-    }
-}
-    
-    // === РЕАЛИЗАЦИЯ ВСЕХ МЕТОДОВ HANDLE ===
+    // === РЕАЛИЗАЦИЯ МЕТОДОВ ===
     
     private void handleFly(CommandSender sender, String[] args) {
         if (!(sender instanceof Player) && args.length < 2) {
@@ -589,10 +587,10 @@ private void sendHelp(CommandSender sender) {
         long time;
         
         switch (args[1].toLowerCase()) {
-            case "day": time = 1000; break;
-            case "night": time = 13000; break;
-            case "noon": time = 6000; break;
-            case "midnight": time = 18000; break;
+            case "day": case "день": time = 1000; break;
+            case "night": case "ночь": time = 13000; break;
+            case "noon": case "полдень": time = 6000; break;
+            case "midnight": case "полночь": time = 18000; break;
             default:
                 try {
                     time = Long.parseLong(args[1]);
@@ -617,15 +615,15 @@ private void sendHelp(CommandSender sender) {
         World world = sender instanceof Player ? ((Player) sender).getWorld() : Bukkit.getWorlds().get(0);
         
         switch (args[1].toLowerCase()) {
-            case "clear":
+            case "clear": case "ясно":
                 world.setStorm(false);
                 world.setThundering(false);
                 break;
-            case "rain":
+            case "rain": case "дождь":
                 world.setStorm(true);
                 world.setThundering(false);
                 break;
-            case "thunder":
+            case "thunder": case "гроза":
                 world.setStorm(true);
                 world.setThundering(true);
                 break;
@@ -952,75 +950,76 @@ private void sendHelp(CommandSender sender) {
         };
     }
     
-@Override
-public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-    List<String> completions = new ArrayList<>();
-    
-    if (args.length == 1) {
-        String[] subCommands = {
-            // Английские команды
-            "fly", "gamemode", "teleport", "heal", "feed", "god", "vanish", 
-            "speed", "kill", "kick", "mute", "clear", "burn", "strike",
-            "time", "weather", "invsee", "workbench", "enderchest", "top",
-            "skull", "flyspeed", "walkspeed", "hat", "back", "broadcast",
-            "say", "sudo", "repair", "help",
-            // Русские команды
-            "полет", "режим", "телепорт", "исцелить", "еда", "бог", "невидимость",
-            "скорость", "убить", "кик", "мут", "очистить", "огонь", "молния",
-            "время", "погода", "инвентарь", "верстак", "эндсундук", "верх",
-            "череп", "скоростьполета", "скоростьходьбы", "шляпа", "назад", 
-            "объявление", "сказать", "судо", "починить", "помощь"
-        };
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
         
-        for (String sub : subCommands) {
-            if (sub.startsWith(args[0].toLowerCase())) {
-                completions.add(sub);
+        if (args.length == 1) {
+            String[] subCommands = {
+                // Английские команды
+                "fly", "gamemode", "teleport", "heal", "feed", "god", "vanish", 
+                "speed", "kill", "kick", "mute", "clear", "burn", "strike",
+                "time", "weather", "invsee", "workbench", "enderchest", "top",
+                "skull", "flyspeed", "walkspeed", "hat", "back", "broadcast",
+                "say", "sudo", "repair", "help",
+                // Русские команды
+                "полет", "режим", "телепорт", "исцелить", "еда", "бог", "невидимость",
+                "скорость", "убить", "кик", "мут", "очистить", "огонь", "молния",
+                "время", "погода", "инвентарь", "верстак", "эндсундук", "верх",
+                "череп", "скоростьполета", "скоростьходьбы", "шляпа", "назад", 
+                "объявление", "сказать", "судо", "починить", "помощь"
+            };
+            
+            for (String sub : subCommands) {
+                if (sub.startsWith(args[0].toLowerCase())) {
+                    completions.add(sub);
+                }
+            }
+        } else if (args.length == 2) {
+            switch (args[0].toLowerCase()) {
+                case "gamemode": case "gm": case "режим":
+                    String[] gamemodes = {"survival", "creative", "adventure", "spectator", 
+                                        "выживание", "творчество", "приключение", "наблюдатель"};
+                    Collections.addAll(completions, gamemodes);
+                    break;
+                    
+                case "teleport": case "tp": case "телепорт":
+                case "invsee": case "инвентарь":
+                case "kick": case "кик":
+                case "mute": case "мут":
+                case "heal": case "исцелить":
+                case "feed": case "еда":
+                case "god": case "бог":
+                case "kill": case "убить":
+                case "burn": case "огонь":
+                case "strike": case "молния":
+                case "skull": case "череп":
+                case "sudo": case "судо":
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                            completions.add(player.getName());
+                        }
+                    }
+                    break;
+                    
+                case "time": case "время":
+                    String[] times = {"day", "night", "noon", "midnight", 
+                                    "день", "ночь", "полдень", "полночь"};
+                    Collections.addAll(completions, times);
+                    break;
+                    
+                case "weather": case "погода":
+                    String[] weathers = {"clear", "rain", "thunder", 
+                                       "ясно", "дождь", "гроза"};
+                    Collections.addAll(completions, weathers);
+                    break;
+                    
+                case "repair": case "починить":
+                    completions.add("all");
+                    break;
             }
         }
-    } else if (args.length == 2) {
-        switch (args[0].toLowerCase()) {
-            case "gamemode": case "gm": case "режим":
-                String[] gamemodes = {"survival", "creative", "adventure", "spectator", 
-                                    "выживание", "творчество", "приключение", "наблюдатель"};
-                Collections.addAll(completions, gamemodes);
-                break;
-                
-            case "teleport": case "tp": case "телепорт":
-            case "invsee": case "инвентарь":
-            case "kick": case "кик":
-            case "mute": case "мут":
-            case "heal": case "исцелить":
-            case "feed": case "еда":
-            case "god": case "бог":
-            case "kill": case "убить":
-            case "burn": case "огонь":
-            case "strike": case "молния":
-            case "skull": case "череп":
-            case "sudo": case "судо":
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-                        completions.add(player.getName());
-                    }
-                }
-                break;
-                
-            case "time": case "время":
-                String[] times = {"day", "night", "noon", "midnight", 
-                                "день", "ночь", "полдень", "полночь"};
-                Collections.addAll(completions, times);
-                break;
-                
-            case "weather": case "погода":
-                String[] weathers = {"clear", "rain", "thunder", 
-                                   "ясно", "дождь", "гроза"};
-                Collections.addAll(completions, weathers);
-                break;
-                
-            case "repair": case "починить":
-                completions.add("all");
-                break;
-        }
+        
+        return completions;
     }
-    
-    return completions;
-}
+} // <-- ЗАКРЫВАЮЩАЯ СКОБКА КЛАССА
