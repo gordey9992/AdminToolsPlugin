@@ -173,7 +173,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(configManager.getMessage("help-header"));
         
-        // Список всех команд с описанием
         String[][] commands = {
             {"fly [игрок]", "Включить/выключить полет"},
             {"gamemode <режим> [игрок]", "Изменить режим игры"},
@@ -212,8 +211,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
     }
     
-    // Реализации всех методов handle...
-    // Из-за ограничения длины покажу несколько примеров:
+    // === РЕАЛИЗАЦИЯ ВСЕХ МЕТОДОВ HANDLE ===
     
     private void handleFly(CommandSender sender, String[] args) {
         if (!(sender instanceof Player) && args.length < 2) {
@@ -316,7 +314,582 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             Map.of("player", args[1])));
     }
     
-    // ... остальные методы handle (heal, feed, god, и т.д.)
+    private void handleHeal(CommandSender sender, String[] args) {
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        target.setHealth(target.getMaxHealth());
+        target.setFoodLevel(20);
+        target.setSaturation(10);
+        target.setFireTicks(0);
+        
+        if (target == sender) {
+            target.sendMessage(configManager.getMessage("heal.healed-self"));
+        } else {
+            sender.sendMessage(configManager.getMessage("heal.healed", 
+                Map.of("player", target.getName())));
+            target.sendMessage(configManager.getMessage("heal.healed-self"));
+        }
+    }
+    
+    private void handleFeed(CommandSender sender, String[] args) {
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        target.setFoodLevel(20);
+        target.setSaturation(10);
+        
+        if (target == sender) {
+            target.sendMessage(configManager.getMessage("feed.fed-self"));
+        } else {
+            sender.sendMessage(configManager.getMessage("feed.fed", 
+                Map.of("player", target.getName())));
+            target.sendMessage(configManager.getMessage("feed.fed-self"));
+        }
+    }
+    
+    private void handleGod(CommandSender sender, String[] args) {
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        boolean godMode = !godPlayers.contains(target.getUniqueId());
+        
+        if (godMode) {
+            godPlayers.add(target.getUniqueId());
+            target.setInvulnerable(true);
+        } else {
+            godPlayers.remove(target.getUniqueId());
+            target.setInvulnerable(false);
+        }
+        
+        if (target == sender) {
+            target.sendMessage(godMode ? 
+                configManager.getMessage("god.enabled-self") : 
+                configManager.getMessage("god.disabled-self"));
+        } else {
+            sender.sendMessage(configManager.getMessage(godMode ? "god.enabled" : "god.disabled", 
+                Map.of("player", target.getName())));
+            target.sendMessage(configManager.getMessage(godMode ? "god.enabled-self" : "god.disabled-self"));
+        }
+    }
+    
+    private void handleVanish(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        boolean vanished = !vanishedPlayers.contains(player.getUniqueId());
+        
+        if (vanished) {
+            vanishedPlayers.add(player.getUniqueId());
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                if (!online.hasPermission("admintools.vanish")) {
+                    online.hidePlayer(plugin, player);
+                }
+            }
+            player.sendMessage(configManager.getMessage("vanish.enabled"));
+        } else {
+            vanishedPlayers.remove(player.getUniqueId());
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                online.showPlayer(plugin, player);
+            }
+            player.sendMessage(configManager.getMessage("vanish.disabled"));
+        }
+    }
+    
+    private void handleSpeed(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin speed <1-10> [игрок]")));
+            return;
+        }
+        
+        try {
+            float speed = Float.parseFloat(args[1]) / 10f;
+            if (speed < 0.1f || speed > 1.0f) {
+                sender.sendMessage(configManager.getMessage("speed.invalid"));
+                return;
+            }
+            
+            Player target = getTarget(sender, args, 2);
+            if (target == null) return;
+            
+            target.setWalkSpeed(speed);
+            target.setFlySpeed(speed);
+            
+            sender.sendMessage(configManager.getMessage("speed.set", 
+                Map.of("speed", args[1], "player", target.getName())));
+                
+        } catch (NumberFormatException e) {
+            sender.sendMessage(configManager.getMessage("speed.invalid"));
+        }
+    }
+    
+    private void handleKill(CommandSender sender, String[] args) {
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        target.setHealth(0);
+        
+        if (target == sender) {
+            target.sendMessage(configManager.getMessage("kill.killed-self"));
+        } else {
+            sender.sendMessage(configManager.getMessage("kill.killed", 
+                Map.of("player", target.getName())));
+        }
+    }
+    
+    private void handleKick(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin kick <игрок> [причина]")));
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        String reason = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)) : "Не указана";
+        
+        target.kickPlayer(configManager.getMessage("kick.kicked-message", 
+            Map.of("reason", reason)));
+            
+        sender.sendMessage(configManager.getMessage("kick.kicked", 
+            Map.of("player", target.getName(), "reason", reason)));
+    }
+    
+    private void handleMute(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin mute <игрок>")));
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        boolean muted = !mutedPlayers.contains(target.getUniqueId());
+        
+        if (muted) {
+            mutedPlayers.add(target.getUniqueId());
+            sender.sendMessage(configManager.getMessage("mute.muted", 
+                Map.of("player", target.getName())));
+        } else {
+            mutedPlayers.remove(target.getUniqueId());
+            sender.sendMessage(configManager.getMessage("mute.unmuted", 
+                Map.of("player", target.getName())));
+        }
+    }
+    
+    private void handleClear(CommandSender sender, String[] args) {
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        target.getInventory().clear();
+        
+        if (target == sender) {
+            target.sendMessage(configManager.getMessage("clear.cleared-self"));
+        } else {
+            sender.sendMessage(configManager.getMessage("clear.cleared", 
+                Map.of("player", target.getName())));
+            target.sendMessage(configManager.getMessage("clear.cleared-self"));
+        }
+    }
+    
+    private void handleBurn(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin burn <игрок> [секунды]")));
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        int seconds = args.length > 2 ? Integer.parseInt(args[2]) : 10;
+        target.setFireTicks(seconds * 20);
+        
+        sender.sendMessage(configManager.getMessage("burn.burning", 
+            Map.of("player", target.getName(), "seconds", String.valueOf(seconds))));
+    }
+    
+    private void handleStrike(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin strike <игрок>")));
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        target.getWorld().strikeLightning(target.getLocation());
+        sender.sendMessage(configManager.getMessage("strike.struck", 
+            Map.of("player", target.getName())));
+    }
+    
+    private void handleTime(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin time <day/night/noon/midnight/число>")));
+            return;
+        }
+        
+        World world = sender instanceof Player ? ((Player) sender).getWorld() : Bukkit.getWorlds().get(0);
+        long time;
+        
+        switch (args[1].toLowerCase()) {
+            case "day": time = 1000; break;
+            case "night": time = 13000; break;
+            case "noon": time = 6000; break;
+            case "midnight": time = 18000; break;
+            default:
+                try {
+                    time = Long.parseLong(args[1]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(configManager.getMessage("time.invalid"));
+                    return;
+                }
+        }
+        
+        world.setTime(time);
+        sender.sendMessage(configManager.getMessage("time.set", 
+            Map.of("time", args[1])));
+    }
+    
+    private void handleWeather(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin weather <clear/rain/thunder>")));
+            return;
+        }
+        
+        World world = sender instanceof Player ? ((Player) sender).getWorld() : Bukkit.getWorlds().get(0);
+        
+        switch (args[1].toLowerCase()) {
+            case "clear":
+                world.setStorm(false);
+                world.setThundering(false);
+                break;
+            case "rain":
+                world.setStorm(true);
+                world.setThundering(false);
+                break;
+            case "thunder":
+                world.setStorm(true);
+                world.setThundering(true);
+                break;
+            default:
+                sender.sendMessage(configManager.getMessage("weather.invalid"));
+                return;
+        }
+        
+        sender.sendMessage(configManager.getMessage("weather.set", 
+            Map.of("weather", args[1])));
+    }
+    
+    private void handleInvsee(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin invsee <игрок>")));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        Player target = Bukkit.getPlayer(args[1]);
+        
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        player.openInventory(target.getInventory());
+        sender.sendMessage(configManager.getMessage("invsee.opened", 
+            Map.of("player", target.getName())));
+    }
+    
+    private void handleWorkbench(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        player.openWorkbench(null, true);
+        player.sendMessage(configManager.getMessage("workbench.opened"));
+    }
+    
+    private void handleEnderchest(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        player.openInventory(target.getEnderChest());
+        player.sendMessage(configManager.getMessage("enderchest.opened", 
+            Map.of("player", target.getName())));
+    }
+    
+    private void handleTop(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        Location location = player.getLocation();
+        Location highest = location.getWorld().getHighestBlockAt(location).getLocation();
+        highest.setY(highest.getY() + 1);
+        
+        player.teleport(highest);
+        player.sendMessage(configManager.getMessage("top.teleported"));
+    }
+    
+    private void handleSkull(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin skull <игрок>")));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        ItemStack skull = new ItemStack(org.bukkit.Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(args[1]));
+        skull.setItemMeta(meta);
+        
+        player.getInventory().addItem(skull);
+        player.sendMessage(configManager.getMessage("skull.given", 
+            Map.of("player", args[1])));
+    }
+    
+    private void handleFlySpeed(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin flyspeed <1-10> [игрок]")));
+            return;
+        }
+        
+        try {
+            float speed = Float.parseFloat(args[1]) / 10f;
+            if (speed < 0.1f || speed > 1.0f) {
+                sender.sendMessage(configManager.getMessage("speed.invalid"));
+                return;
+            }
+            
+            Player target = getTarget(sender, args, 2);
+            if (target == null) return;
+            
+            target.setFlySpeed(speed);
+            sender.sendMessage(configManager.getMessage("flyspeed.set", 
+                Map.of("speed", args[1], "player", target.getName())));
+                
+        } catch (NumberFormatException e) {
+            sender.sendMessage(configManager.getMessage("speed.invalid"));
+        }
+    }
+    
+    private void handleWalkSpeed(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin walkspeed <1-10> [игрок]")));
+            return;
+        }
+        
+        try {
+            float speed = Float.parseFloat(args[1]) / 10f;
+            if (speed < 0.1f || speed > 1.0f) {
+                sender.sendMessage(configManager.getMessage("speed.invalid"));
+                return;
+            }
+            
+            Player target = getTarget(sender, args, 2);
+            if (target == null) return;
+            
+            target.setWalkSpeed(speed);
+            sender.sendMessage(configManager.getMessage("walkspeed.set", 
+                Map.of("speed", args[1], "player", target.getName())));
+                
+        } catch (NumberFormatException e) {
+            sender.sendMessage(configManager.getMessage("speed.invalid"));
+        }
+    }
+    
+    private void handleHat(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        ItemStack hand = player.getInventory().getItemInMainHand();
+        
+        if (hand.getType().isAir()) {
+            sender.sendMessage("§cВозьмите предмет в руку!");
+            return;
+        }
+        
+        player.getInventory().setHelmet(hand);
+        player.getInventory().setItemInMainHand(null);
+        player.sendMessage(configManager.getMessage("hat.equipped"));
+    }
+    
+    private void handleBack(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        Location lastLocation = lastLocations.get(player.getUniqueId());
+        
+        if (lastLocation == null) {
+            player.sendMessage(configManager.getMessage("back.no-location"));
+            return;
+        }
+        
+        player.teleport(lastLocation);
+        player.sendMessage(configManager.getMessage("back.teleported"));
+    }
+    
+    private void handleBroadcast(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin broadcast <сообщение>")));
+            return;
+        }
+        
+        String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        Bukkit.broadcastMessage(configManager.getMessage("broadcast.broadcasted", 
+            Map.of("message", message)));
+    }
+    
+    private void handleSay(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin say <сообщение>")));
+            return;
+        }
+        
+        String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        Bukkit.broadcastMessage(configManager.getMessage("say.said", 
+            Map.of("message", message)));
+    }
+    
+    private void handleSudo(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(configManager.getMessage("usage", 
+                Map.of("usage", "/admin sudo <игрок> <команда/сообщение>")));
+            return;
+        }
+        
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(configManager.getMessage("player-not-found", 
+                Map.of("player", args[1])));
+            return;
+        }
+        
+        String command = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+        
+        if (command.startsWith("/")) {
+            // Выполнить команду
+            target.performCommand(command.substring(1));
+            sender.sendMessage(configManager.getMessage("sudo.forced", 
+                Map.of("player", target.getName(), "command", command)));
+        } else {
+            // Отправить сообщение
+            target.chat(command);
+            sender.sendMessage(configManager.getMessage("sudo.forced-chat", 
+                Map.of("player", target.getName(), "message", command)));
+        }
+    }
+    
+    private void handleRepair(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(configManager.getMessage("player-only"));
+            return;
+        }
+        
+        Player player = (Player) sender;
+        Player target = getTarget(sender, args, 1);
+        if (target == null) return;
+        
+        boolean repairAll = args.length > 1 && "all".equalsIgnoreCase(args[1]);
+        
+        if (repairAll) {
+            // Починить все предметы в инвентаре
+            for (ItemStack item : target.getInventory().getContents()) {
+                if (item != null && item.getType().getMaxDurability() > 0) {
+                    item.setDurability((short) 0);
+                }
+            }
+            for (ItemStack item : target.getInventory().getArmorContents()) {
+                if (item != null && item.getType().getMaxDurability() > 0) {
+                    item.setDurability((short) 0);
+                }
+            }
+            
+            if (target == sender) {
+                target.sendMessage(configManager.getMessage("repair.repaired-all-self"));
+            } else {
+                sender.sendMessage(configManager.getMessage("repair.repaired-all", 
+                    Map.of("player", target.getName())));
+                target.sendMessage(configManager.getMessage("repair.repaired-all-self"));
+            }
+        } else {
+            // Починить предмет в руке
+            ItemStack hand = target.getInventory().getItemInMainHand();
+            if (hand != null && hand.getType().getMaxDurability() > 0) {
+                hand.setDurability((short) 0);
+                
+                if (target == sender) {
+                    target.sendMessage(configManager.getMessage("repair.repaired-self"));
+                } else {
+                    sender.sendMessage(configManager.getMessage("repair.repaired", 
+                        Map.of("player", target.getName())));
+                    target.sendMessage(configManager.getMessage("repair.repaired-self"));
+                }
+            } else {
+                sender.sendMessage("§cПредмет в руке нельзя починить!");
+            }
+        }
+    }
+    
+    // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ===
     
     private Player getTarget(CommandSender sender, String[] args, int argIndex) {
         if (args.length > argIndex) {
@@ -352,7 +925,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         
         if (args.length == 1) {
-            // Основные команды
             String[] subCommands = {
                 "fly", "gamemode", "teleport", "heal", "feed", "god", "vanish", 
                 "speed", "kill", "kick", "mute", "clear", "burn", "strike",
@@ -367,7 +939,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
             }
         } else if (args.length == 2) {
-            // Автодополнение для конкретных команд
             switch (args[0].toLowerCase()) {
                 case "gamemode":
                     String[] gamemodes = {"survival", "creative", "adventure", "spectator"};
@@ -377,7 +948,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 case "tp":
                 case "invsee":
                 case "kick":
-                case "ban":
                 case "mute":
                 case "heal":
                 case "feed":
@@ -386,7 +956,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 case "burn":
                 case "strike":
                 case "skull":
-                    // Имена игроков
+                case "sudo":
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
                             completions.add(player.getName());
@@ -400,6 +970,9 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 case "weather":
                     String[] weathers = {"clear", "rain", "thunder"};
                     Collections.addAll(completions, weathers);
+                    break;
+                case "repair":
+                    completions.add("all");
                     break;
             }
         }
