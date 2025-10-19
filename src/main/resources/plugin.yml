@@ -56,6 +56,13 @@ permissions:
       admintools.sudo: true
       admintools.say: true
       admintools.broadcast: true
+      admintools.top: true
+      admintools.skull: true
+      admintools.flyspeed: true
+      admintools.walkspeed: true
+      admintools.nick: true
+      admintools.hat: true
+      admintools.back: true
   admintools.particle:
     description: Разрешение на использование частиц
     default: op
