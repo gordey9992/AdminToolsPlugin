@@ -1,102 +1,44 @@
-package com.example.admintools.utils;
+package com.example.admintools.commands;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.example.admintools.AdminToolsPlugin;
+import org.bukkit.command.PluginCommand;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-public class ConfigManager {
+public class CommandManager {
     
-    private final JavaPlugin plugin;
-    private FileConfiguration config;
-    private FileConfiguration messagesConfig;
-    private File configFile;
-    private File messagesFile;
-    private final Map<String, String> messages = new HashMap<>();
+    private final AdminToolsPlugin plugin;
+    private DirectCommands directCommands;
     
-    public ConfigManager(JavaPlugin plugin) {
+    public CommandManager(AdminToolsPlugin plugin) {
         this.plugin = plugin;
     }
     
-    public void saveDefaultConfig() {
-        plugin.saveDefaultConfig();
-        createMessagesFile();
-    }
-    
-    public void reloadConfig() {
-        plugin.reloadConfig();
-        this.config = plugin.getConfig();
-        loadMessagesConfig();
-        loadMessages();
-    }
-    
-    private void createMessagesFile() {
-        messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-        if (!messagesFile.exists()) {
-            plugin.saveResource("messages.yml", false);
+    public void registerCommands() {
+        this.directCommands = new DirectCommands(plugin);
+        
+        // Регистрируем команду частиц
+        PluginCommand setParticleCommand = plugin.getCommand("setparticle");
+        if (setParticleCommand != null) {
+            SetParticleCommand particleExecutor = new SetParticleCommand(plugin);
+            setParticleCommand.setExecutor(particleExecutor);
+            setParticleCommand.setTabCompleter(particleExecutor);
         }
-    }
-    
-    private void loadMessagesConfig() {
-        messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-        messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
-    }
-    
-    private void loadMessages() {
-        messages.clear();
         
-        // Загружаем все сообщения из messages.yml
-        loadSection("", messagesConfig);
-    }
-    
-    private void loadSection(String path, FileConfiguration config) {
-        if (config.getConfigurationSection(path) == null) return;
+        // Регистрируем ВСЕ прямые команды
+        String[] directCommandNames = {
+            "рыба", "полет", "исцелить", "еда", "бог", "невидимость", "скорость", 
+            "убить", "кик", "мут", "очистить", "огонь", "молния", "время", 
+            "погода", "инвентарь", "верстак", "эндсундук", "верх", "череп",
+            "скоростьполета", "скоростьходьбы", "шляпа", "назад", "объявление",
+            "сказать", "судо", "починить", "режим", "телепорт", "суперсила",
+            "лазер", "телекинез", "торнадо", "антигравитация", "радуга", 
+            "метеорит", "полныйремонт"
+        };
         
-        for (String key : config.getConfigurationSection(path).getKeys(false)) {
-            String fullPath = path.isEmpty() ? key : path + "." + key;
-            
-            if (config.isConfigurationSection(fullPath)) {
-                loadSection(fullPath, config);
-            } else if (config.isString(fullPath)) {
-                messages.put(fullPath, config.getString(fullPath));
+        for (String cmdName : directCommandNames) {
+            PluginCommand directCommand = plugin.getCommand(cmdName);
+            if (directCommand != null) {
+                directCommand.setExecutor(directCommands);
             }
-        }
-    }
-    
-    public String getMessage(String path) {
-        return messages.getOrDefault(path, "&cСообщение не найдено: " + path)
-                .replace("&", "§");
-    }
-    
-    public String getMessage(String path, Map<String, String> placeholders) {
-        String message = getMessage(path);
-        
-        if (placeholders != null) {
-            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-                message = message.replace("{" + entry.getKey() + "}", entry.getValue());
-            }
-        }
-        
-        return message;
-    }
-    
-    public FileConfiguration getConfig() {
-        return config;
-    }
-    
-    public FileConfiguration getMessagesConfig() {
-        return messagesConfig;
-    }
-    
-    public void saveMessagesConfig() {
-        try {
-            messagesConfig.save(messagesFile);
-        } catch (IOException e) {
-            plugin.getLogger().warning("Не удалось сохранить messages.yml: " + e.getMessage());
         }
     }
 }
