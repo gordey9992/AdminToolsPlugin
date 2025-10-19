@@ -161,7 +161,7 @@ public class DirectCommands implements CommandExecutor {
     // === ВОЛШЕБНАЯ РЫБА ===
     private void giveMagicFish(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -198,7 +198,7 @@ public class DirectCommands implements CommandExecutor {
     // === ОСНОВНЫЕ КОМАНДЫ ===
     private void handleFly(CommandSender sender, String[] args) {
         if (!(sender instanceof Player) && args.length < 1) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -273,7 +273,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleVanish(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -531,7 +531,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleTop(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -615,7 +615,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleHat(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -634,7 +634,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleBack(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -767,7 +767,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleTeleport(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -824,7 +824,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleLaser(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -847,7 +847,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleTelekinesis(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -858,7 +858,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleTornado(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -890,7 +890,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleRainbow(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -983,7 +983,7 @@ public class DirectCommands implements CommandExecutor {
     
     private void handleAntigravity(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(configManager.getMessage("player-only"));
+            sender.sendMessage("§cЭту команду могут использовать только игроки!");
             return;
         }
         
@@ -1014,7 +1014,7 @@ public class DirectCommands implements CommandExecutor {
             return (Player) sender;
         }
         
-        sender.sendMessage(configManager.getMessage("player-only"));
+        sender.sendMessage("§cЭту команду могут использовать только игроки!");
         return null;
     }
     
