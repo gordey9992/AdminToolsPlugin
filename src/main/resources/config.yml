@@ -2,7 +2,8 @@
 telegram:
   enabled: true
   bot-token: "8263486505:AAHs0FDTQJrNRoMd1loLaNASWrp4SfKEuRc"
-  chat-id: "-1002935953089"
+  chat-id: "-1002935953089"  # ID основного чата
+  topic-id: "434"  # ID темы (топика) "Чат с майнкрафтом"
   update-interval: 2
   # Фильтрация каналов EssentialsXChat
   ignore-channels:
@@ -19,7 +20,7 @@ telegram:
 formats:
   minecraft-to-telegram: "🎮 {player} » {message}"
   telegram-to-minecraft: "&9[TG] &b{username} &7» &f{message}"
-
+  
 # Сообщения плагина
 messages:
   prefix: "&6[AdminTools] &f"
