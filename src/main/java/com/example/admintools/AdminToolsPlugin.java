@@ -11,7 +11,6 @@ public class AdminToolsPlugin extends JavaPlugin {
 
     private ConfigManager configManager;
     private static AdminToolsPlugin instance;
-    private ConfigManager configManager;
     private ParticleManager particleManager;
     private CommandManager commandManager;
     private TelegramManager telegramManager;
@@ -19,8 +18,6 @@ public class AdminToolsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        
-        this.configManager = new ConfigManager(this);
         
         // Красивое приветствие в консоль
         printWelcomeMessage();
