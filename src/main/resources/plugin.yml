@@ -144,6 +144,72 @@ commands:
   полетрыбы:
     description: Дать волшебную летающую рыбу
     usage: /<command> [игрок]
+    суперсила:
+  description: Дать супер-силу
+  usage: /<command> [игрок]
+водопад:
+  description: Создать водопад
+  usage: /<command>
+лазер:
+  description: Выстрелить лазером
+  usage: /<command>
+телекинез:
+  description: Включить телекинез
+  usage: /<command>
+заморозка:
+  description: Заморозить игрока
+  usage: /<command> [игрок]
+торнадо:
+  description: Создать торнадо
+  usage: /<command>
+землетрясение:
+  description: Вызвать землетрясение
+  usage: /<command>
+нектар:
+  description: Дать нектар богов
+  usage: /<command> [игрок]
+радиация:
+  description: Облучить радиацией
+  usage: /<command> [игрок]
+антигравитация:
+  description: Включить антигравитацию
+  usage: /<command>
+телепортация:
+  description: Случайная телепортация
+  usage: /<command> [игрок]
+неуязвимость:
+  description: Сделать неуязвимым
+  usage: /<command> [игрок]
+сверхскорость:
+  description: Сверхскорость
+  usage: /<command> [игрок]
+гигант:
+  description: Стать гигантом
+  usage: /<command> [игрок]
+карлик:
+  description: Стать карликом
+  usage: /<command> [игрок]
+невидимка:
+  description: Полная невидимость
+  usage: /<command> [игрок]
+свет:
+  description: Осветить область
+  usage: /<command>
+тьма:
+  description: Затемнить область
+  usage: /<command>
+буря:
+  description: Вызвать бурю
+  usage: /<command>
+радугаv2:
+  description: Улучшенная радуга
+  usage: /<command>
+фейерверк:
+  description: Запустить фейерверк
+  usage: /<command>
+портал:
+  description: Создать портал
+  usage: /<command>
 
 permissions:
   admintools.*:
