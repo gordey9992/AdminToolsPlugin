@@ -952,63 +952,75 @@ private void sendHelp(CommandSender sender) {
         };
     }
     
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
+@Override
+public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    List<String> completions = new ArrayList<>();
+    
+    if (args.length == 1) {
+        String[] subCommands = {
+            // Английские команды
+            "fly", "gamemode", "teleport", "heal", "feed", "god", "vanish", 
+            "speed", "kill", "kick", "mute", "clear", "burn", "strike",
+            "time", "weather", "invsee", "workbench", "enderchest", "top",
+            "skull", "flyspeed", "walkspeed", "hat", "back", "broadcast",
+            "say", "sudo", "repair", "help",
+            // Русские команды
+            "полет", "режим", "телепорт", "исцелить", "еда", "бог", "невидимость",
+            "скорость", "убить", "кик", "мут", "очистить", "огонь", "молния",
+            "время", "погода", "инвентарь", "верстак", "эндсундук", "верх",
+            "череп", "скоростьполета", "скоростьходьбы", "шляпа", "назад", 
+            "объявление", "сказать", "судо", "починить", "помощь"
+        };
         
-        if (args.length == 1) {
-            String[] subCommands = {
-                "fly", "gamemode", "teleport", "heal", "feed", "god", "vanish", 
-                "speed", "kill", "kick", "mute", "clear", "burn", "strike",
-                "time", "weather", "invsee", "workbench", "enderchest", "top",
-                "skull", "flyspeed", "walkspeed", "hat", "back", "broadcast",
-                "say", "sudo", "repair"
-            };
-            
-            for (String sub : subCommands) {
-                if (sub.startsWith(args[0].toLowerCase())) {
-                    completions.add(sub);
-                }
-            }
-        } else if (args.length == 2) {
-            switch (args[0].toLowerCase()) {
-                case "gamemode":
-                    String[] gamemodes = {"survival", "creative", "adventure", "spectator"};
-                    Collections.addAll(completions, gamemodes);
-                    break;
-                case "teleport":
-                case "tp":
-                case "invsee":
-                case "kick":
-                case "mute":
-                case "heal":
-                case "feed":
-                case "god":
-                case "kill":
-                case "burn":
-                case "strike":
-                case "skull":
-                case "sudo":
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-                            completions.add(player.getName());
-                        }
-                    }
-                    break;
-                case "time":
-                    String[] times = {"day", "night", "noon", "midnight"};
-                    Collections.addAll(completions, times);
-                    break;
-                case "weather":
-                    String[] weathers = {"clear", "rain", "thunder"};
-                    Collections.addAll(completions, weathers);
-                    break;
-                case "repair":
-                    completions.add("all");
-                    break;
+        for (String sub : subCommands) {
+            if (sub.startsWith(args[0].toLowerCase())) {
+                completions.add(sub);
             }
         }
-        
-        return completions;
+    } else if (args.length == 2) {
+        switch (args[0].toLowerCase()) {
+            case "gamemode": case "gm": case "режим":
+                String[] gamemodes = {"survival", "creative", "adventure", "spectator", 
+                                    "выживание", "творчество", "приключение", "наблюдатель"};
+                Collections.addAll(completions, gamemodes);
+                break;
+                
+            case "teleport": case "tp": case "телепорт":
+            case "invsee": case "инвентарь":
+            case "kick": case "кик":
+            case "mute": case "мут":
+            case "heal": case "исцелить":
+            case "feed": case "еда":
+            case "god": case "бог":
+            case "kill": case "убить":
+            case "burn": case "огонь":
+            case "strike": case "молния":
+            case "skull": case "череп":
+            case "sudo": case "судо":
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                        completions.add(player.getName());
+                    }
+                }
+                break;
+                
+            case "time": case "время":
+                String[] times = {"day", "night", "noon", "midnight", 
+                                "день", "ночь", "полдень", "полночь"};
+                Collections.addAll(completions, times);
+                break;
+                
+            case "weather": case "погода":
+                String[] weathers = {"clear", "rain", "thunder", 
+                                   "ясно", "дождь", "гроза"};
+                Collections.addAll(completions, weathers);
+                break;
+                
+            case "repair": case "починить":
+                completions.add("all");
+                break;
+        }
     }
+    
+    return completions;
 }
